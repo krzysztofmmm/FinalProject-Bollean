@@ -394,5 +394,11 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# Ignore appsettings
+appsettings.json
+appsettings.Development.json
+
+**/Properties/launchSettings.json
+
 # JetBrains Rider
 *.sln.iml
