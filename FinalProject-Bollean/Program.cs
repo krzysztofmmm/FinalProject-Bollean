@@ -13,7 +13,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<FinalProjectContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUserRepository , UserRepository>();
+builder.Services.AddScoped<IPostRepository , PostRepository>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddCors(options =>
 {
@@ -39,6 +42,7 @@ if(app.Environment.IsDevelopment())
 }
 
 app.ConfigureUserEndpoints();
+app.ConfigurePostEndpoints();
 
 app.UseHttpsRedirection();
 app.Run();
