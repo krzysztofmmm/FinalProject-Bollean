@@ -1,4 +1,5 @@
 ﻿using FinalProject_Bollean.Models;
+using FinalProject_Bollean.Models.DTOs;
 using FinalProject_Bollean.Repositories.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
@@ -46,15 +47,24 @@ namespace FinalProject_Bollean.Services
             return password.Any(char.IsUpper) && password.Any(char.IsDigit);
         }
 
-        public async Task<(bool Success, string Message)> ValidateUserAsync(string email , string password)
+        public async Task<(bool Success, UserLoginResponseDto User, string Message)> ValidateUserAsync(string email , string password)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
             if(user == null || !BCrypt.Net.BCrypt.Verify(password , user.PasswordHash))
             {
-                return (false, "Invalid login attempt.");
+                return (false, null, "Invalid login attempt.");
             }
 
-            return (true, "Login successful.");
+            var userDto = new UserLoginResponseDto
+            {
+                Id = user.Id ,
+                Email = user.Email ,
+                FirstName = user.FirstName ,
+                LastName = user.LastName ,
+                Bio = user.Bio ,
+                Role = user.Role ,
+            };
+            return (true, userDto, "Login successful.");
         }
     }
 }

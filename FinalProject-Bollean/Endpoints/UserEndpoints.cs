@@ -36,11 +36,12 @@ namespace FinalProject_Bollean.Endpoints
 
         private static async Task<IResult> LoginUser(UserLoginDto userLoginDto , UserService userService)
         {
-            var (success, message) = await userService.ValidateUserAsync(
-                userLoginDto.Email ,
-                userLoginDto.Password);
-
-            return success ? Results.Ok(message) : Results.BadRequest(message);
+            var (success, user, message) = await userService.ValidateUserAsync(userLoginDto.Email , userLoginDto.Password);
+            if(!success)
+            {
+                return Results.BadRequest(message);
+            }
+            return Results.Ok(user);
         }
     }
 }
