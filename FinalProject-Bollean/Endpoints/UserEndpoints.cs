@@ -1,5 +1,6 @@
 ﻿using FinalProject_Bollean.Models.DTOs;
 using FinalProject_Bollean.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FinalProject_Bollean.Endpoints
 {
@@ -22,6 +23,13 @@ namespace FinalProject_Bollean.Endpoints
                .Produces(200)
                .Produces(400)
                .WithName("LoginUser");
+
+            app.MapGroup("/users")
+                .MapGet("/{id:int}" , GetUserById)
+                .WithTags("Users")
+                .Produces<UserResponseDto>(200)
+                .Produces(404)
+                .WithName("GetUserById");
         }
 
         private static async Task<IResult> RegisterUser(UserRegisterDto userRegisterDto , UserService userService)
@@ -42,6 +50,16 @@ namespace FinalProject_Bollean.Endpoints
                 return Results.BadRequest(message);
             }
             return Results.Ok(user);
+        }
+
+        private static async Task<IResult> GetUserById(int id , [FromServices] UserService userService)
+        {
+            var (success, userDto, message) = await userService.GetUserByIdAsync(id);
+            if(!success)
+            {
+                return Results.NotFound(message);
+            }
+            return Results.Ok(userDto);
         }
     }
 }

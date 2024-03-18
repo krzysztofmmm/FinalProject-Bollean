@@ -66,5 +66,29 @@ namespace FinalProject_Bollean.Services
             };
             return (true, userDto, "Login successful.");
         }
+
+        public async Task<(bool Success, UserResponseDto User, string Message)> GetUserByIdAsync(int id)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if(user == null)
+            {
+                return (false, null, $"User with ID {id} not found.");
+            }
+
+            var userDto = ToUserResponseDto(user);
+            return (true, userDto, "User found.");
+        }
+
+        public UserResponseDto ToUserResponseDto(User user)
+        {
+            return new UserResponseDto
+            {
+                Id = user.Id ,
+                Email = user.Email ,
+                FirstName = user.FirstName ,
+                LastName = user.LastName ,
+                Bio = user.Bio ,
+            };
+        }
     }
 }
