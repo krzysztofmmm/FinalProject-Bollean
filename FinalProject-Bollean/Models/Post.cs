@@ -9,6 +9,9 @@ namespace FinalProject_Bollean.Models
         [Key]
         public int Id { get; set; }
 
+        [Column("title")]
+        public string? Title { get; set; }
+
         [Column("tag")]
         public string? Tag { get; set; }
 
