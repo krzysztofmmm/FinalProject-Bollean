@@ -8,6 +8,10 @@ namespace FinalProject_Bollean.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly FinalProjectContext _context;
+        public async Task<User?> GetUserByIdAsync(int id)
+        {
+            return await _context.Users.FindAsync(id);
+        }
 
         public UserRepository(FinalProjectContext context)
         {
