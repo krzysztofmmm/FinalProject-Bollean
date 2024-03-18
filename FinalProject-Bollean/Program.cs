@@ -15,8 +15,21 @@ builder.Services.AddDbContext<FinalProjectContext>(options => options.UseNpgsql(
 builder.Services.AddScoped<IUserRepository , UserRepository>();
 builder.Services.AddScoped<UserService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "AllowAnyOrigin" ,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                                .AllowAnyMethod()
+                                .AllowAnyHeader();
+                      });
+});
+
+
 
 var app = builder.Build();
+app.UseCors("AllowAnyOrigin");
 
 // Configure the HTTP request pipeline.
 if(app.Environment.IsDevelopment())
