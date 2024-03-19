@@ -32,6 +32,8 @@ namespace FinalProject_Bollean.Models
         public UserRole Role { get; set; } = UserRole.User; // Default role, adjust as necessary
 
         public virtual ICollection<Post>? Posts { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     }
 
 }
