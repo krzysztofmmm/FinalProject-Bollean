@@ -14,7 +14,7 @@ namespace FinalProject_Bollean.Services
             _userRepository = userRepository;
         }
 
-        public async Task<(bool Success, string Message)> RegisterUserAsync(string email , string firstName , string password)
+        public async Task<(bool Success, string Message)> RegisterUserAsync(string email , string firstName , string lastName , string password)
         {
             if(!new EmailAddressAttribute().IsValid(email))
             {
@@ -35,6 +35,7 @@ namespace FinalProject_Bollean.Services
             {
                 Email = email ,
                 FirstName = firstName ,
+                LastName = lastName ,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(password)
             };
 

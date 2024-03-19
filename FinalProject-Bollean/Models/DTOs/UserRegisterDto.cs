@@ -11,6 +11,8 @@ namespace FinalProject_Bollean.Models.DTOs
         [Required]
         public string FirstName { get; set; }
 
+        public string? LastName { get; set; } // Not required
+
         [Required]
         [StringLength(100 , MinimumLength = 6)]
         [DataType(DataType.Password)]

@@ -37,6 +37,7 @@ namespace FinalProject_Bollean.Endpoints
             var (success, message) = await userService.RegisterUserAsync(
                 userRegisterDto.Email ,
                 userRegisterDto.FirstName ,
+                userRegisterDto.LastName ,
                 userRegisterDto.Password);
 
             return success ? Results.Ok(message) : Results.BadRequest(message);
