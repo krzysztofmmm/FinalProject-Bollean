@@ -1,4 +1,5 @@
-﻿using FinalProject_Bollean.Models.DTOs;
+﻿using FinalProject_Bollean.Models;
+using FinalProject_Bollean.Models.DTOs;
 using FinalProject_Bollean.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,12 @@ namespace FinalProject_Bollean.Endpoints
                 .Produces<UserResponseDto>(200)
                 .Produces(404)
                 .WithName("GetUserById");
+            app.MapGroup("/users")
+                .MapPut("/users/{id:int}" , UpdateUserEndpoint)
+                .WithTags("Users")
+                .WithName("UpdateUser")
+                .Produces<UserResponseDto>(200)
+                .Produces(404);
         }
 
         private static async Task<IResult> RegisterUser(UserRegisterDto userRegisterDto , UserService userService)
@@ -61,6 +68,30 @@ namespace FinalProject_Bollean.Endpoints
                 return Results.NotFound(message);
             }
             return Results.Ok(userDto);
+        }
+
+        private static async Task<IResult> UpdateUserEndpoint(int id , UserUpdateDto userUpdateDto , UserService userService)
+        {
+            var (success, updatedUser, message) = await userService.UpdateUserAsync(id , userUpdateDto);
+            if(!success)
+            {
+                return Results.Problem(message);
+            }
+
+            var userResponseDto = AsDto(updatedUser);
+            return Results.Ok(userResponseDto);
+        }
+
+        private static UserResponseDto AsDto(User user)
+        {
+            return new UserResponseDto
+            {
+                Id = user.Id ,
+                Email = user.Email ,
+                FirstName = user.FirstName ,
+                LastName = user.LastName ,
+                Bio = user.Bio
+            };
         }
     }
 }

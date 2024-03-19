@@ -91,5 +91,22 @@ namespace FinalProject_Bollean.Services
                 Bio = user.Bio ,
             };
         }
+
+        public async Task<(bool Success, User UpdatedUser, string Message)> UpdateUserAsync(int id , UserUpdateDto userUpdateDto)
+        {
+            var user = await _userRepository.GetUserByIdAsync(id);
+            if(user == null)
+            {
+                return (false, null, $"User with ID {id} not found.");
+            }
+
+            user.FirstName = userUpdateDto.FirstName ?? user.FirstName;
+            user.LastName = userUpdateDto.LastName ?? user.LastName;
+            user.Bio = userUpdateDto.Bio ?? user.Bio;
+
+            await _userRepository.UpdateUserAsync(user);
+            return (true, user, "User updated successfully.");
+        }
+
     }
 }
