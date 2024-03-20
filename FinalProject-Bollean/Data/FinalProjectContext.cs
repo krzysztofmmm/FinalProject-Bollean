@@ -12,6 +12,7 @@ namespace FinalProject_Bollean.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +34,18 @@ namespace FinalProject_Bollean.Data
                 .HasMany(u => u.Comments)
                 .WithOne(c => c.User)
                 .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<Like>()
+           .HasOne(p => p.Post)
+           .WithMany(b => b.Likes)
+           .HasForeignKey(p => p.PostId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Like>()
+                .HasOne(c => c.Comment)
+                .WithMany(c => c.Likes)
+                .HasForeignKey(c => c.CommentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
