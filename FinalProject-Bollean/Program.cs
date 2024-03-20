@@ -15,6 +15,7 @@ builder.Services.AddDbContext<FinalProjectContext>(options => options.UseNpgsql(
 builder.Services.AddScoped<IUserRepository , UserRepository>();
 builder.Services.AddScoped<IPostRepository , PostRepository>();
 builder.Services.AddScoped<ICommentRepository , CommentRepository>();
+builder.Services.AddScoped<ILikeRepository , LikeRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddHttpContextAccessor();
 
@@ -45,6 +46,7 @@ if(app.Environment.IsDevelopment())
 app.ConfigureUserEndpoints();
 app.ConfigurePostEndpoints();
 app.ConfigureCommentEndpoints();
+app.ConfigureLikeEndpoints();
 
 
 app.UseHttpsRedirection();
