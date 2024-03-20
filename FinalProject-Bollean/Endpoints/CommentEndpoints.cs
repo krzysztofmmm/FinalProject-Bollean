@@ -34,17 +34,21 @@ namespace FinalProject_Bollean.Endpoints
 
         private static async Task<IResult> CreateComment(CommentCreateDto dto , ICommentRepository repository)
         {
+            if(string.IsNullOrWhiteSpace(dto.Content))
+            {
+                return Results.BadRequest("Content cannot be empty.");
+            }
+
             var comment = new Comment
             {
                 UserId = dto.UserId ,
                 PostId = dto.PostId ,
                 Content = dto.Content ,
                 CreatedAt = DateTime.UtcNow ,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow ,
             };
 
             var createdComment = await repository.AddCommentAsync(comment);
-
             return Results.Created($"/comments/{createdComment.Id}" , createdComment.AsDto());
         }
 
@@ -52,7 +56,6 @@ namespace FinalProject_Bollean.Endpoints
         {
             var comments = await repository.GetCommentsForPostIdAsync(postId);
 
-            // Transform the comments into CommentResponseDtos
             var commentDtos = comments.Select(c => new CommentResponseDto
             {
                 Id = c.Id ,
@@ -80,10 +83,16 @@ namespace FinalProject_Bollean.Endpoints
                 return Results.NotFound($"Comment with ID {id} not found.");
             }
 
-            existingComment.Content = dto.Content;
-            var updatedComment = await repository.UpdateCommentAsync(existingComment);
+            if(string.IsNullOrWhiteSpace(dto.Content))
+            {
+                return Results.BadRequest("Content cannot be empty.");
+            }
 
-            return Results.Ok(updatedComment.AsDto());
+            existingComment.Content = dto.Content;
+            existingComment.UpdatedAt = DateTime.UtcNow;
+
+            await repository.UpdateCommentAsync(existingComment);
+            return Results.Ok(existingComment.AsDto());
         }
 
         private static async Task<IResult> DeleteComment(int id , ICommentRepository repository)

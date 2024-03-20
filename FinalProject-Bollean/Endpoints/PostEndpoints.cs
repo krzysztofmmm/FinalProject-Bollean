@@ -43,10 +43,15 @@ namespace FinalProject_Bollean.Endpoints
 
         private static async Task<IResult> CreatePost(PostCreateDto dto , IPostRepository repository)
         {
+            if(string.IsNullOrWhiteSpace(dto.Content))
+            {
+                return Results.BadRequest("Content cannot be empty.");
+            }
+
             var post = new Post
             {
                 UserId = dto.UserId ,
-                Title = dto.Title ,
+                Title = dto.Title ?? "Title" ,
                 Tag = dto.Tag ,
                 Content = dto.Content ,
                 CreatedAt = DateTime.UtcNow ,
@@ -54,9 +59,9 @@ namespace FinalProject_Bollean.Endpoints
             };
 
             var createdPost = await repository.AddPostAsync(post);
-
             return Results.Created($"/posts/{createdPost.Id}" , createdPost.AsDto());
         }
+
 
         private static async Task<IResult> GetAllPosts(IPostRepository repository)
         {
@@ -77,15 +82,25 @@ namespace FinalProject_Bollean.Endpoints
             var post = await repository.GetPostByIdAsync(id);
             if(post == null) return Results.NotFound();
 
-            post.Title = dto.Title ?? post.Title; // Only update if the title is provided
+            post.Title = dto.Title ?? post.Title;
+
+            if(!string.IsNullOrWhiteSpace(dto.Content))
+            {
+                post.Content = dto.Content;
+            }
+            else
+            {
+                return Results.BadRequest("Content cannot be empty.");
+            }
+
             post.Tag = dto.Tag ?? post.Tag;
-            post.Content = dto.Content;
             post.UpdatedAt = DateTime.UtcNow;
 
             await repository.UpdatePostAsync(post);
-
             return Results.Ok(post.AsDto());
         }
+
+
 
         private static async Task<IResult> DeletePost(int id , IPostRepository repository)
         {
