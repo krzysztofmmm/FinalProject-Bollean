@@ -25,6 +25,10 @@ namespace FinalProject_Bollean.Endpoints
             likeGroup.MapGet("/comment/{commentId:int}" , GetLikesForComment)
                 .WithName("GetLikesForComment")
                 .Produces<int>(200);
+
+            likeGroup.MapGet("/hasUserLiked" , HasUserLiked)
+                      .WithName("HasUserLiked")
+                      .Produces<bool>(200);
         }
 
         private static async Task<IResult> ToggleLike([FromBody] ToggleLikeRequestDto request , [FromServices] ILikeRepository likeRepository)
@@ -57,6 +61,12 @@ namespace FinalProject_Bollean.Endpoints
         {
             var likeCount = await likeRepository.GetLikesForCommentAsync(commentId);
             return Results.Ok(new { CommentId = commentId , LikeCount = likeCount });
+        }
+
+        private static async Task<IResult> HasUserLiked([FromQuery] int userId , [FromQuery] int? postId , [FromQuery] int? commentId , [FromServices] ILikeRepository likeRepository)
+        {
+            var hasLiked = await likeRepository.HasUserLikedAsync(userId , postId , commentId);
+            return Results.Ok(hasLiked);
         }
     }
 }

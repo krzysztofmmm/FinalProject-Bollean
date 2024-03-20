@@ -21,7 +21,6 @@ namespace FinalProject_Bollean.Repositories
                 commentId = null;
             }
 
-            // If commentId is specified, verify it belongs to the post
             if(commentId.HasValue)
             {
                 var commentExists = await _context.Comments
@@ -62,6 +61,11 @@ namespace FinalProject_Bollean.Repositories
         public async Task<int> GetLikesForCommentAsync(int commentId)
         {
             return await _context.Likes.CountAsync(l => l.CommentId == commentId);
+        }
+
+        public async Task<bool> HasUserLikedAsync(int userId , int? postId , int? commentId)
+        {
+            return await _context.Likes.AnyAsync(l => l.UserId == userId && l.PostId == postId && l.CommentId == commentId);
         }
     }
 }
