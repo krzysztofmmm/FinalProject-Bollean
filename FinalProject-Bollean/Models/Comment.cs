@@ -21,6 +21,8 @@ namespace FinalProject_Bollean.Models
 
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
+
     }
 }
 
